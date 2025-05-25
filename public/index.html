@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html>
 <head>
@@ -152,3 +153,159 @@
   </script>
 </body>
 </html>
+=======
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Travel Bot Chat</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #f0f0f0;
+      margin: 0;
+      padding: 0;
+    }
+
+    .chat-container {
+      max-width: 600px;
+      margin: 40px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #ccc;
+    }
+
+    .chat-box {
+      height: 400px;
+      overflow-y: auto;
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin-bottom: 10px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .bubble {
+      padding: 10px;
+      margin: 5px 10px;
+      border-radius: 10px;
+      max-width: 80%;
+      white-space: pre-line;
+    }
+
+    .user {
+      background: #daf1ff;
+      align-self: flex-end;
+      text-align: right;
+    }
+
+    .bot {
+      background: #eee;
+      align-self: flex-start;
+    }
+
+    .message-wrapper {
+      display: flex;
+      flex-direction: column;
+    }
+
+    form input[type="text"] {
+      padding: 10px;
+      width: 60%;
+    }
+
+    form input[type="file"] {
+      padding: 5px;
+    }
+
+    form button {
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <h2>🌍 Ask Travel Bot</h2>
+
+    <div class="chat-box" id="chat-box"></div>
+
+    <form id="chat-form">
+      <input type="text" id="textInput" placeholder="Type your travel interest...">
+      <input type="file" id="imageInput" accept="image/*">
+      <button type="submit">Send</button>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById('chat-form');
+    const chatBox = document.getElementById('chat-box');
+    const textInput = document.getElementById('textInput');
+    const imageInput = document.getElementById('imageInput');
+
+    function addMessage(message, sender) {
+      const msgDiv = document.createElement('div');
+      msgDiv.classList.add('bubble', sender);
+      msgDiv.innerText = message;
+
+      const wrapper = document.createElement('div');
+      wrapper.classList.add('message-wrapper');
+      wrapper.appendChild(msgDiv);
+
+      chatBox.appendChild(wrapper);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const message = textInput.value.trim();
+      const image = imageInput.files[0];
+
+      if (!message && !image) {
+        alert("Please enter a message or upload an image.");
+        return;
+      }
+
+      if (message) addMessage(message, 'user');
+      if (image) addMessage("[📷 Image uploaded]", 'user');
+
+      const formData = new FormData();
+      formData.append('text', message);
+      if (image) {
+        formData.append('image', image);
+      }
+
+      try {
+        const response = await fetch('/recommend', {
+          method: 'POST',
+          body: formData
+        });
+
+        const html = await response.text();
+        const temp = document.createElement('div');
+        temp.innerHTML = html;
+
+        const listItems = temp.querySelectorAll('ul li');
+        let resultText = "";
+
+        if (listItems.length > 0) {
+          listItems.forEach(item => {
+            resultText += `• ${item.innerText}\n`;
+          });
+        } else {
+          resultText = "No suggestions found.";
+        }
+
+        addMessage(resultText, 'bot');
+      } catch (err) {
+        addMessage("⚠️ Error contacting the server.", 'bot');
+        console.error(err);
+      }
+
+      textInput.value = '';
+      imageInput.value = '';
+    });
+  </script>
+</body>
+</html>
+>>>>>>> 8e21600f2cb0159d0091a8cb5ed06e6ea23ca7e9
