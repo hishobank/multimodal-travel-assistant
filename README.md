@@ -68,11 +68,3 @@ azure-multimodal-travel-bot/
 │   └── index.html         # Chatbot UI (text + image)
 └── uploads/               # Temporary folder for incoming images
 ```
-
-## 🤝 Contributing
-
-Feel free to open issues or pull requests to improve:
-
-- Better prompt engineering
-- Voice input / text-to-speech
-- Deployment to Azure App Service
